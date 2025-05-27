@@ -1,0 +1,41 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "/home/adnan/Documents/GitHub/erc20token/smart-contract/contracts/CustomToken.sol": {
+      "lastModificationDate": 1748322296019,
+      "contentHash": "8b66c104fe8379205f53a7142df96ef1",
+      "sourceName": "contracts/CustomToken.sol",
+      "solcConfig": {
+        "version": "0.8.28",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.8.28"
+      ],
+      "artifacts": [
+        "EmergingTechGridToken"
+      ]
+    }
+  }
+}

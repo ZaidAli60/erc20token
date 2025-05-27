@@ -3,7 +3,7 @@ import './App.css';
 function App() {
   return (
     <div className="App">
-      <h1>EmergingTectGrid</h1>
+      <h1 className='text-primary'>EmergingTectGrid</h1>
     </div>
   );
 }
