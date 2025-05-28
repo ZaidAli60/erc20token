@@ -258,7 +258,7 @@ function App() {
     }
   ]
 
-  const contractAddress = "0x325fAC0AB96DBcD8d58F5f83BeB723fbD0EA4d48"; // replace this
+  const contractAddress = "0x96e3c5c12c3f27c55b606ece266a658662963b27"; // replace this
 
   // Load MetaMask and contract
   useEffect(() => {
@@ -342,46 +342,6 @@ function App() {
   };
 
   return (
-    //     <div className="container py-5">
-    //       <div className="card shadow-lg rounded-4 p-4">
-    //         <h2 className="text-primary text-center mb-4">EmergingTechGrid Token</h2>
-    //         <p><strong>Account:</strong> {account}</p>
-    //         <p><strong>Balance:</strong> {balance}</p>
-    //         <p><strong>Name:</strong> {name}</p>
-    //         <p><strong>Symbol:</strong> <strong>{symbol}</strong></p>
-
-    //         <div className="form-group mb-3">
-    //           <label>Recipient Address</label>
-    //           <input
-    //             type="text"
-    //             className="form-control"
-    //             placeholder="Enter recipient address"
-    //             value={recipient}
-    //             onChange={(e) => setRecipient(e.target.value)}
-    //           />
-    //         </div>
-
-    //         <div className="form-group mb-4">
-    //           <label>Amount</label>
-    //           <input
-    //             type="number"
-    //             className="form-control"
-    //             placeholder="Enter amount"
-    //             value={amount}
-    //             onChange={(e) => setAmount(e.target.value)}
-    //           />
-    //         </div>
-
-    //         <button className="btn btn-primary w-100" onClick={handleTransfer}>
-    //           Transfer Tokens
-    //         </button>
-    // {/* 
-    //         <button onClick={() => checkTokenBalance("0x08cee1BEFAD83d418Ec00f50da78c35507e68BD4")}>
-    //           Check My Balance
-    //         </button> */}
-    //       </div>
-    //     </div>
-
     <div className="container my-5" style={{ maxWidth: '720px' }}>
       <h1 className="mb-4 text-center fw-bold text-primary">EmergingTechGrid Token (ETG)</h1>
 

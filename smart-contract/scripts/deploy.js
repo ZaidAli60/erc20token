@@ -1,7 +1,7 @@
 const hre = require("hardhat");
 
 async function main() {
-    const initialSupply = 1000;
+    const initialSupply = 100000;
     const Contract = await hre.ethers.getContractFactory("EmergingTechGridToken");
     const myContract = await Contract.deploy(initialSupply);
 
