@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import Web3 from 'web3';
+import BigNumber from 'bignumber.js';
 import './App.css';
 
 function App() {
@@ -11,8 +12,14 @@ function App() {
   const [balance, setBalance] = useState(0);
   const [recipient, setRecipient] = useState('');
   const [amount, setAmount] = useState('');
+  const [checkAddress, setCheckAddress] = useState("");
 
-  console.log(web3);
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text);
+    alert("Copied to clipboard!");
+  };
+
+  // console.log(web3);
 
 
   const contractAbi = [
@@ -283,44 +290,47 @@ function App() {
     };
 
     init();
+     // eslint-disable-next-line
   }, []);
 
-const handleTransfer = async () => {
-  if (token && recipient && amount) {
-    try {
-      const gasPrice = await web3.eth.getGasPrice();
+  const handleTransfer = async () => {
+    if (token && recipient && amount) {
+      try {
+        const gasPrice = await web3.eth.getGasPrice();
 
-      // convert amount from human readable to smallest unit
-      const amountToSend = (amount * (10 ** 18)).toString();
+        // convert amount from human readable to smallest unit
+        const amountToSend = (amount * (10 ** 18)).toString();
 
-      await token.methods.transfer(recipient, amountToSend).send({
-        from: account,
-        gas: 100000,
-        gasPrice,
-      });
+        await token.methods.transfer(recipient, amountToSend).send({
+          from: account,
+          gas: 100000,
+          gasPrice,
+        });
 
-      alert(`Transferred ${amount} ${symbol} to ${recipient}`);
-      setRecipient("")
-      setAmount("")
-    } catch (err) {
-      console.error('Transfer failed:', err);
-      alert('Transfer failed');
+        alert(`Transferred ${amount} ${symbol} to ${recipient}`);
+        setRecipient("")
+        setAmount("")
+      } catch (err) {
+        console.error('Transfer failed:', err);
+        alert('Transfer failed');
+      }
     }
-  }
-};
+  };
+
+
   const checkTokenBalance = async (addressToCheck) => {
-    console.log(addressToCheck);
     try {
       if (!web3 || !token || !addressToCheck) {
         alert('Missing web3, token, or address');
         return;
       }
 
-      const decimals = await token.methods.decimals().call();
+      const decimals = Number(await token.methods.decimals().call());
       const rawBalance = await token.methods.balanceOf(addressToCheck).call();
 
-      // Convert balance from raw units to human-readable format
-      const formattedBalance = Number(rawBalance) / 10 ** decimals;
+      const balanceBN = new BigNumber(rawBalance);
+      const divisor = new BigNumber(10).pow(decimals);
+      const formattedBalance = balanceBN.dividedBy(divisor).toFixed(4); // 4 decimals shown
 
       console.log(`Balance of ${addressToCheck}: ${formattedBalance} ${symbol}`);
       alert(`Balance: ${formattedBalance} ${symbol}`);
@@ -331,45 +341,142 @@ const handleTransfer = async () => {
     }
   };
 
-
   return (
-    <div className="container py-5">
-      <div className="card shadow-lg rounded-4 p-4">
-        <h2 className="text-primary text-center mb-4">CyberForge Token DApp</h2>
-        <p><strong>Account:</strong> {account}</p>
-        <p><strong>Balance:</strong> {balance}</p>
-        <p><strong>Name:</strong> {name}</p>
-        <p><strong>Symbol:</strong> <strong>{symbol}</strong></p>
+    //     <div className="container py-5">
+    //       <div className="card shadow-lg rounded-4 p-4">
+    //         <h2 className="text-primary text-center mb-4">EmergingTechGrid Token</h2>
+    //         <p><strong>Account:</strong> {account}</p>
+    //         <p><strong>Balance:</strong> {balance}</p>
+    //         <p><strong>Name:</strong> {name}</p>
+    //         <p><strong>Symbol:</strong> <strong>{symbol}</strong></p>
 
-        <div className="form-group mb-3">
-          <label>Recipient Address</label>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Enter recipient address"
-            value={recipient}
-            onChange={(e) => setRecipient(e.target.value)}
-          />
+    //         <div className="form-group mb-3">
+    //           <label>Recipient Address</label>
+    //           <input
+    //             type="text"
+    //             className="form-control"
+    //             placeholder="Enter recipient address"
+    //             value={recipient}
+    //             onChange={(e) => setRecipient(e.target.value)}
+    //           />
+    //         </div>
+
+    //         <div className="form-group mb-4">
+    //           <label>Amount</label>
+    //           <input
+    //             type="number"
+    //             className="form-control"
+    //             placeholder="Enter amount"
+    //             value={amount}
+    //             onChange={(e) => setAmount(e.target.value)}
+    //           />
+    //         </div>
+
+    //         <button className="btn btn-primary w-100" onClick={handleTransfer}>
+    //           Transfer Tokens
+    //         </button>
+    // {/* 
+    //         <button onClick={() => checkTokenBalance("0x08cee1BEFAD83d418Ec00f50da78c35507e68BD4")}>
+    //           Check My Balance
+    //         </button> */}
+    //       </div>
+    //     </div>
+
+    <div className="container my-5" style={{ maxWidth: '720px' }}>
+      <h1 className="mb-4 text-center fw-bold text-primary">EmergingTechGrid Token (ETG)</h1>
+
+      {/* Token Info Card */}
+      <div className="card shadow-sm mb-4">
+        <div className="card-body">
+          <h4 className="card-title mb-3">{name} <span className="badge bg-secondary">{symbol}</span></h4>
+
+          <p className="mb-2">
+            <strong>Contract Address:</strong> <code className="text-break">{contractAddress}</code>{" "}
+            <button
+              className="btn btn-sm btn-outline-primary ms-2"
+              onClick={() => copyToClipboard(contractAddress)}
+            >
+              Copy
+            </button>
+          </p>
+
+          <p className="mb-2">
+            <strong>Wallet Address:</strong> <code className="text-break">{account}</code>{" "}
+            <button
+              className="btn btn-sm btn-outline-primary ms-2"
+              onClick={() => copyToClipboard(account)}
+            >
+              Copy
+            </button>
+          </p>
+
+          <p className="mb-0">
+            <strong>Total Supply:</strong> {balance}
+          </p>
         </div>
+      </div>
 
-        <div className="form-group mb-4">
-          <label>Amount</label>
-          <input
-            type="number"
-            className="form-control"
-            placeholder="Enter amount"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-          />
+      {/* Transfer Token Form */}
+      <div className="card shadow-sm mb-4">
+        <div className="card-header bg-primary text-white fw-semibold">Transfer Tokens</div>
+        <div className="card-body">
+          <div className="mb-3">
+            <label htmlFor="recipient" className="form-label">Recipient Address</label>
+            <input
+              type="text"
+              id="recipient"
+              className="form-control"
+              placeholder="Enter recipient address"
+              value={recipient}
+              onChange={(e) => setRecipient(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label htmlFor="amount" className="form-label">Amount ({symbol})</label>
+            <input
+              type="number"
+              id="amount"
+              className="form-control"
+              placeholder="Enter amount"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              min="0"
+              step="any"
+            />
+          </div>
+
+          <button
+            className="btn btn-primary w-100"
+            onClick={handleTransfer}
+            disabled={!recipient || !amount}
+          >
+            Transfer Tokens
+          </button>
         </div>
+      </div>
 
-        <button className="btn btn-primary w-100" onClick={handleTransfer}>
-          Transfer Tokens
-        </button>
-
-        <button onClick={() => checkTokenBalance("0x08cee1BEFAD83d418Ec00f50da78c35507e68BD4")}>
-          Check My Balance
-        </button>
+      {/* Check Token Balance */}
+      <div className="card shadow-sm">
+        <div className="card-header bg-secondary text-white fw-semibold">Check Token Balance</div>
+        <div className="card-body">
+          <div className="input-group mb-3">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Enter wallet address"
+              value={checkAddress}
+              onChange={(e) => setCheckAddress(e.target.value)}
+            />
+            <button
+              className="btn btn-secondary"
+              onClick={() => checkTokenBalance(checkAddress)}
+              disabled={!checkAddress}
+            >
+              Check Balance
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
